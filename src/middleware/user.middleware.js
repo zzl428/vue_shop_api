@@ -5,7 +5,7 @@ const md5password = require('../utils/passwordHandle')
 
 const verifyUser = async(ctx, next) => {
   // 获取用户名和密码
-  const { username, password } = ctx.request.body;
+  const { username, password } = ctx.request.body.form;
   
   // 判断用户名或密码是否为空
   if(!username || !password) {
@@ -24,15 +24,15 @@ const verifyUser = async(ctx, next) => {
 }
 
 const handlePassword = async(ctx, next) => {
-  const { password } = ctx.request.body
-  ctx.request.body.password = passwordHandle(password)
+  const { password } = ctx.request.body.form
+  ctx.request.body.form.password = passwordHandle(password)
 
   await next()
 }
 
 const verifyLogin = async(ctx, next) => {
   // 获取用户名和密码
-  const {username, password} = ctx.request.body
+  const {username, password} = ctx.request.body.form
   // 判断用户名和密码是否为空
   if(!username || !password) {
     const err = new Error(errorType.NAME_OR_PASSWORD_IS_REQUIRED)
