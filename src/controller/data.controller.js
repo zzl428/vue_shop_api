@@ -1,6 +1,7 @@
 const dataService = require('../service/data.service')
 
 class DataController {
+  // 获取菜单栏数据
   async menus(ctx, next) {
     ctx.body = {
       "data": [
@@ -106,6 +107,18 @@ class DataController {
           "status": 200
       }
     }
+  }
+
+  // 获取权限列表
+  async rightsList(ctx, next) {
+    const result = await dataService.rightsList()
+    ctx.body = result
+  }
+
+//   获取角色列表
+  async rolesList(ctx, next) {
+    const result = await dataService.rolesList()
+    ctx.body = result
   }
 
   async list(ctx, next) {

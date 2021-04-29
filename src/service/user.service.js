@@ -3,7 +3,7 @@ const connection = require('../app/database')
 class UserService {
   async register(form) {
     const { username, password, email, mobile } = form
-    const sql =  `INSERT INTO USER (NAME, PASSWORD, role, state, email, mobile) VALUES (?, ?, 2, 1, ?, ?)`
+    const sql =  `INSERT INTO USER (NAME, PASSWORD, state, email, mobile) VALUES (?, ?, 1, ?, ?)`
     const result = await connection.execute(sql, [username, password, email, mobile])
     return result
   }
@@ -42,6 +42,15 @@ class UserService {
     const sql = `SELECT name, role, state, email, mobile, createAt, updateAt FROM USER WHERE id = ?`
     const [result] = await connection.execute(sql, [id])
     return result
+  }
+
+  // 给用户分配角色
+  async setRole(userId, roleId) {
+    let sql = `SELECT roleName FROM role WHERE role_id = ?`
+    let [result] = await connection.execute(sql, [roleId])
+    sql = `UPDATE USER SET role = ?, role_id = ? WHERE id = ?`
+    let [finalResult] = await connection.execute(sql, [result[0].roleName, roleId, userId])
+    return finalResult
   }
 }
 

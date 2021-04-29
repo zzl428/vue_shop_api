@@ -55,6 +55,14 @@ class UserController {
     const result = await userService.searchById(id)
     ctx.body = result
   }
+
+  // 分配用户角色
+  async setRole(ctx, next) {
+    const {userId} = ctx.params
+    const {roleId} = ctx.request.body
+    const result = await userService.setRole(userId, roleId)
+    ctx.body = result
+  }
 }
 
 module.exports = new UserController()

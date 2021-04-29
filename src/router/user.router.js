@@ -2,7 +2,7 @@ const Router = require('koa-router')
 
 const userRouter = new Router({prefix:'/users'})
 
-const { create, check, login, update, search, searchById } = require('../controller/user.controller')
+const { create, check, login, update, search, searchById, setRole } = require('../controller/user.controller')
 const { verifyUser, handlePassword, verifyLogin } = require('../middleware/user.middleware')
 const { verifyAuth } = require('../middleware/auth.middleware')
 
@@ -19,5 +19,7 @@ userRouter.patch('/', verifyAuth, update)
 userRouter.get('/username', verifyAuth, search)
 // 按id搜索用户
 userRouter.get('/id', verifyAuth, searchById)
+// 给用户分配角色
+userRouter.put('/:userId/role', verifyAuth, setRole)
 
 module.exports = userRouter
