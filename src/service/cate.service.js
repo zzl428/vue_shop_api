@@ -9,7 +9,7 @@ function sqlFunc(level, pid) {
 
 class CateService {
   async cateList(queryInfo) {
-    const middle = JSON.parse(queryInfo)
+    let middle = JSON.parse(queryInfo)
     let {type, pagenum, pagesize} = middle
     let midtype = type || 3
     let sql = `SELECT COUNT(*) total FROM category WHERE cat_level = 0`
@@ -18,6 +18,8 @@ class CateService {
     
     let midsize = pagesize || result[0].total
     let offset = (midnum - 1) * midsize
+
+
 
     sql = `SELECT
               *
@@ -73,6 +75,41 @@ class CateService {
     let sql = `SELECT cat_name FROM category WHERE cat_id = ?`
     const [result] = await connection.execute(sql, [cat_id])
     return result[0].cat_name
+  }
+
+  // 获取分类参数
+  async attrList(cat_id, sel) {
+    let sql = `SELECT * FROM attribute WHERE cat_id = ? AND attr_sel = ?`
+    const [result] = await connection.execute(sql, [cat_id, sel])
+    return result
+  }
+
+  // 添加分类参数
+  async addAttr(cat_id, attr_name, attr_sel, attr_vals) {
+    let sql = `INSERT INTO attribute (attr_name, cat_id, attr_sel, attr_write, attr_vals) VALUES (?, ?, ?, ?, ?)`
+    const [result] = await connection.execute(sql, [attr_name, cat_id, attr_sel, 'manual', attr_vals])
+    return result
+  }
+
+  // 修改参数的对话框获取参数数据
+  async getAttr(cat_id, attr_id, attr_sel, attr_vals) {
+    let sql = `SELECT * FROM attribute WHERE attr_id = ?`
+    const [result] = await connection.execute(sql, [attr_id])
+    return result[0]
+  }
+
+  // 修改分类参数属性
+  async update(cat_id, attr_id, attr_name, attr_sel, attr_vals) {
+    let sql = `UPDATE attribute SET attr_name = ?, attr_vals = ? WHERE attr_id = ?`
+    const [result] = await connection.execute(sql, [attr_name, attr_vals, attr_id])
+    return result
+  }
+
+  // 删除参数属性
+  async remove(cat_id, attr_id) {
+    let sql = `DELETE FROM attribute WHERE attr_id = ?`
+    const [result] = await connection.execute(sql, [attr_id])
+    return result
   }
 }
 
