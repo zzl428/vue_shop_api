@@ -1,5 +1,8 @@
 const dataService = require('../service/data.service')
 
+const fs = require('fs')
+// 导入参数
+const config = require('../app/config')
 class DataController {
   // 获取菜单栏数据
   async menus(ctx, next) {
@@ -153,6 +156,24 @@ class DataController {
         const { table, field, value } = ctx.query
         const result = await dataService.remove(table, field, value)
         ctx.body = result
+    }
+
+    // 上传图片,临时存储,返回
+    async upload(ctx, next) {
+        let {filename, destination} = ctx.req.file
+        let temp_path = `${destination}/${filename}`
+        let url = `${config.APP_HOST}:${config.APP_PORT}/data/temp_goods_pics/${filename}`
+        ctx.body = {
+            temp_path,
+            url
+        }
+    }
+
+    // 访问静态图片
+    async showPic(ctx, next) {
+        const {pic_name} = ctx.params
+        ctx.response.set('content-type', `file`)
+        ctx.body = fs.createReadStream(`./uploads/temp_goods_pics/${pic_name}`)
     }
 }
 

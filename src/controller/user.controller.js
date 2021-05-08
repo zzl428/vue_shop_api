@@ -51,7 +51,9 @@ class UserController {
 
   // 按id搜索用户
   async searchById(ctx, next) {
+    console.log(11);
     const {id} = ctx.query
+    
     const result = await userService.searchById(id)
     ctx.body = result
   }

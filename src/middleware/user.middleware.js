@@ -32,7 +32,7 @@ const handlePassword = async(ctx, next) => {
 
 const verifyLogin = async(ctx, next) => {
   // 获取用户名和密码
-  const {username, password} = ctx.request.body.form
+  const {username, password} = ctx.request.body.form || ctx.request.body
   // 判断用户名和密码是否为空
   if(!username || !password) {
     const err = new Error(errorType.NAME_OR_PASSWORD_IS_REQUIRED)
